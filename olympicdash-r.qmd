@@ -5,9 +5,10 @@ format:
     orientation: columns
     nav-buttons: [github]
     github: https://github.com/posit-conf-2024/olympicdash
+    theme:
+      - flatly
+      - style/olympicdash.scss
 logo: images/olympics-logo.svg
-editor_options: 
-  chunk_output_type: console
 ---
 
 ```{r}
@@ -15,6 +16,7 @@ editor_options:
 #| message: false
 library(tidyverse)
 library(gt)
+library(scales)
 ```
 
 ```{r}
@@ -46,7 +48,8 @@ summer_olympics <- olympics |>
 
 ```{r}
 #| title: Medals by sport
-#| fig-width: 10
+#| fig-width: 8
+#| fig-height: 3
 summer_olympics |>
   mutate(
     sport = fct_lump_n(sport, n = 15),
@@ -55,8 +58,18 @@ summer_olympics |>
     sport = fct_relevel(sport, "Other", after = 0)
   ) |>
   ggplot(aes(y = sport, fill = medal)) +
-  geom_bar() +
+  geom_bar(color = "white") +
   guides(fill = guide_legend(reverse = TRUE)) +
+  scale_fill_manual(values = c(
+    "Gold" = "#d4af37",
+    "Silver" = "#c0c0c0",
+    "Bronze" = "#cd7f32"
+    )
+  ) +
+  scale_x_continuous(
+    breaks = seq(0, 7000, 1000),
+    labels = label_number(big.mark = ",")
+  ) +
   labs(
     x = NULL,
     y = NULL,
@@ -64,7 +77,8 @@ summer_olympics |>
   ) +
   theme_minimal() +
   theme(
-    legend.position = c(0.8, 0.2),
+    legend.position = "inside",
+    legend.position.inside = c(0.8, 0.2),
     legend.direction = "horizontal",
     legend.background = element_rect(fill = "white", color = "gray")
   )
@@ -77,23 +91,40 @@ Due to World War II, no olympic games were held in 1940 and 1944.
 
 ```{r}
 #| title: Medals by year
-#| fig-asp: 0.3
-#| fig-width: 10
+#| fig-width: 11
+#| fig-height: 2
 summer_olympics |>
   count(year, medal) |>
-  ggplot(aes(x = year, y = n, color = medal)) +
-   geom_point(size = 0.8) +
-  geom_line() +
-  guides(color = guide_legend(reverse = TRUE)) +
+  ggplot(aes(x = year, y = n, fill = medal)) +
+  geom_line(aes(color = medal), linewidth = 0.8) +
+  geom_point(size = 2, color = "white", shape = "circle filled") +
+  guides(
+    color = guide_legend(reverse = TRUE),
+    fill = guide_legend(reverse = TRUE)
+  ) +
+  scale_color_manual(values = c(
+    "Gold" = "#d4af37",
+    "Silver" = "#c0c0c0",
+    "Bronze" = "#cd7f32"
+    )
+  ) +
+  scale_fill_manual(values = c(
+    "Gold" = "#d4af37",
+    "Silver" = "#c0c0c0",
+    "Bronze" = "#cd7f32"
+    )
+  ) +  
   scale_x_continuous(breaks = seq(1896, 2020, 8)) +
   labs(
     x = "Year",
     y = NULL,
-    color = "Medal"
+    color = "Medal",
+    fill = "Medal"
   ) +
   theme_minimal() +
   theme(
-    legend.position = c(0.2, 0.8),
+    legend.position = "inside",
+    legend.position.inside = c(0.8, 0.2),
     legend.direction = "horizontal",
     legend.background = element_rect(fill = "white", color = "gray")
   )
@@ -127,7 +158,7 @@ Most golds:
 
 `{r} summer_most_golds$n`
 
-`{r} as.character(summer_most_golds$team)`
+`{r} summer_most_golds$team`
 :::
 
 ::: {.valuebox icon="award-fill" color="#c0c0c0"}
@@ -135,7 +166,7 @@ Most silvers:
 
 `{r} summer_most_silvers$n`
 
-`{r} as.character(summer_most_silvers$team)`
+`{r} summer_most_silvers$team`
 :::
 
 ::: {.valuebox icon="award-fill" color="#cd7f32"}
@@ -143,7 +174,7 @@ Most bronzes:
 
 `{r} summer_most_bronzes$n`
 
-`{r} as.character(summer_most_bronzes$team)`
+`{r} summer_most_bronzes$team`
 :::
 
 ### Row - Tabsets of tables {height=70% .tabset}
@@ -203,7 +234,8 @@ winter_olympics <- olympics |>
 
 ```{r}
 #| title: Medals by sport
-#| fig-width: 10
+#| fig-width: 8
+#| fig-height: 3
 winter_olympics |>
   mutate(
     sport = fct_lump_n(sport, n = 15),
@@ -212,8 +244,18 @@ winter_olympics |>
     sport = fct_relevel(sport, "Other", after = 0)
   ) |>
   ggplot(aes(y = sport, fill = medal)) +
-  geom_bar() +
+  geom_bar(color = "white") +
   guides(fill = guide_legend(reverse = TRUE)) +
+  scale_fill_manual(values = c(
+    "Gold" = "#d4af37",
+    "Silver" = "#c0c0c0",
+    "Bronze" = "#cd7f32"
+    )
+  ) +
+  scale_x_continuous(
+    breaks = seq(0, 1500, 250),
+    labels = label_number(big.mark = ",")
+  ) +
   labs(
     x = NULL,
     y = NULL,
@@ -221,13 +263,12 @@ winter_olympics |>
   ) +
   theme_minimal() +
   theme(
-    legend.position = c(0.8, 0.2),
+    legend.position = "inside",
+    legend.position.inside = c(0.7, 0.2),
     legend.direction = "horizontal",
     legend.background = element_rect(fill = "white", color = "gray")
   )
 ```
-
-### Row - Medals by year {height=40%}
 
 ### Row - Medals by year {height=40%}
 
@@ -236,23 +277,40 @@ Due to World War II, no olympic games were held in 1940 and 1944.
 
 ```{r}
 #| title: Medals by year
-#| fig-asp: 0.3
-#| fig-width: 10
+#| fig-width: 11
+#| fig-height: 2
 winter_olympics |>
   count(year, medal) |>
-  ggplot(aes(x = year, y = n, color = medal)) +
-   geom_point(size = 0.8) +
-  geom_line() +
-  guides(color = guide_legend(reverse = TRUE)) +
+  ggplot(aes(x = year, y = n, fill = medal)) +
+  geom_line(aes(color = medal), linewidth = 0.8) +
+  geom_point(size = 2, color = "white", shape = "circle filled") +
+  guides(
+    color = guide_legend(reverse = TRUE),
+    fill = guide_legend(reverse = TRUE)
+  ) +
+  scale_color_manual(values = c(
+    "Gold" = "#d4af37",
+    "Silver" = "#c0c0c0",
+    "Bronze" = "#cd7f32"
+    )
+  ) +
+  scale_fill_manual(values = c(
+    "Gold" = "#d4af37",
+    "Silver" = "#c0c0c0",
+    "Bronze" = "#cd7f32"
+    )
+  ) +  
   scale_x_continuous(breaks = seq(1896, 2020, 8)) +
   labs(
     x = "Year",
     y = NULL,
-    color = "Medal"
+    color = "Medal",
+    fill = "Medal"
   ) +
   theme_minimal() +
   theme(
-    legend.position = c(0.2, 0.8),
+    legend.position = "inside",
+    legend.position.inside = c(0.2, 0.8),
     legend.direction = "horizontal",
     legend.background = element_rect(fill = "white", color = "gray")
   )
@@ -264,7 +322,7 @@ winter_olympics |>
 ### Row - Value boxes {height=30%}
 
 ```{r}
-#| label: winter-calculate-most-medals
+#| label: wint-calculate-most-medals
 winter_most_golds <- winter_olympics |>
   filter(medal == "Gold") |>
   count(team, sort = TRUE) |>
@@ -286,7 +344,7 @@ Most golds:
 
 `{r} winter_most_golds$n`
 
-`{r} as.character(winter_most_golds$team)`
+`{r} winter_most_golds$team`
 :::
 
 ::: {.valuebox icon="award-fill" color="#c0c0c0"}
@@ -294,7 +352,7 @@ Most silvers:
 
 `{r} winter_most_silvers$n`
 
-`{r} as.character(winter_most_silvers$team)`
+`{r} winter_most_silvers$team`
 :::
 
 ::: {.valuebox icon="award-fill" color="#cd7f32"}
@@ -302,7 +360,7 @@ Most bronzes:
 
 `{r} winter_most_bronzes$n`
 
-`{r} as.character(winter_most_bronzes$team)`
+`{r} winter_most_bronzes$team`
 :::
 
 ### Row - Tabsets of tables {height=70% .tabset}
@@ -329,6 +387,7 @@ winter_olympics |>
 
 ::: {.card title="Bottom 30 total medals"}
 Teams sorted in ascending order of total medals.
+
 ```{r}
 #| title: Bottom 30 total medals
 winter_olympics |>
@@ -346,4 +405,3 @@ winter_olympics |>
   )
 ```
 :::
-
