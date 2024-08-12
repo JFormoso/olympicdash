@@ -1,6 +1,12 @@
 ---
 title: "Olympic Games"
-format: html
+format: 
+  dashboard:
+    orientation: columns
+    logo: images/olympics-logo.svg
+    nav-buttons: 
+      - icon: github
+        href: https://posit-conf-2024.github.io/quarto-dashboards/
 ---
 
 ```{r}
@@ -16,6 +22,8 @@ library(gt)
 olympics_full <- read_csv("data/olympics.csv")
 ```
 
+
+
 ```{r}
 #| label: prep-data
 olympics <- olympics_full |>
@@ -28,9 +36,12 @@ olympics <- olympics_full |>
   mutate(medal = fct_relevel(medal, "Bronze", "Silver", "Gold"))
 ```
 
-## Medals by sport
+## Columna 1 - Medals by sport and year
+
+### Row 1 - Medal by sport {height=60%}
 
 ```{r}
+#| title: Medals by sport
 olympics |>
   mutate(
     sport = fct_lump_n(sport, n = 15),
@@ -55,9 +66,10 @@ olympics |>
   )
 ```
 
-## Medals by year
+### Row 2 - Medals by year {height=40%}
 
 ```{r}
+#| title: Medals by year
 olympics |>
   count(year, medal) |>
   ggplot(aes(x = year, y = n, color = medal)) +
@@ -79,9 +91,10 @@ olympics |>
   )
 ```
 
-## Medals by country
+## Columna 2 - Medals by country 
 
 ```{r}
+#| title: Medals by country
 olympics |>
   count(team, medal) |>
   pivot_wider(names_from = medal, values_from = n, values_fill = 0) |>
