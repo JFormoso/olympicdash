@@ -5,6 +5,9 @@ format:
     orientation: columns
     nav-buttons: [github]
     github: https://github.com/posit-conf-2024/olympicdash
+    theme:
+      - sketchy
+      - style/olympicdash.scss
 logo: ../images/olympics-logo.svg
 ---
 
@@ -62,17 +65,22 @@ summer_olympics["sport"] = summer_olympics["sport"].cat.reorder_categories(new_o
 # Plot
 (
     ggplot(summer_olympics, aes(x = "sport", fill = "medal"))
-    + geom_bar()
+    + geom_bar(color="white")
     + coord_flip()
-    + guides(fill = guide_legend(reverse = True)) 
-    + labs(x = "", y = "", fill = "Medal") 
+    + guides(fill = guide_legend(reverse = True))
+    + scale_fill_manual(values = {"Gold":"#d4af37", "Silver":"#c0c0c0", "Bronze":"#cd7f32"})   
+    + labs(
+      x = "",
+      y = "",
+      fill = "Medal"
+    ) 
     + theme_minimal() 
     + theme(
-        legend_position = "inside",
-        legend_position_inside = (0.9, 0.2),
-        legend_direction = "horizontal",
-        legend_background = element_rect(fill = "white", color = "gray"),
-        figure_size = (10, 5)
+      legend_position = "inside",
+      legend_position_inside = (0.8, 0.2),
+      legend_direction = "horizontal",
+      legend_background = element_rect(fill = "white", color = "gray"),
+      figure_size = (10, 5)
     )
 )
 ```
@@ -91,6 +99,7 @@ summer_olympics_count = summer_olympics.groupby(["year", "medal"], observed=True
     + geom_line() 
     + guides(color = guide_legend(reverse = True)) 
     + scale_x_continuous(breaks = range(1896, 2020, 8)) 
+    + scale_color_manual(values = {"Gold":"#d4af37", "Silver":"#c0c0c0", "Bronze":"#cd7f32"})   
     + labs(x = "Year", y = "", color = "Medal") 
     + theme_minimal() 
     + theme(
@@ -249,18 +258,23 @@ winter_olympics["sport"] = winter_olympics["sport"].cat.reorder_categories(new_o
 
 # Plot
 (
-    ggplot(winter_olympics, aes(x = "sport", fill = "medal"))
-    + geom_bar()
+    ggplot(summer_olympics, aes(x = "sport", fill = "medal"))
+    + geom_bar(color="white")
     + coord_flip()
-    + guides(fill = guide_legend(reverse = True)) 
-    + labs(x = "", y = "", fill = "Medal") 
+    + guides(fill = guide_legend(reverse = True))
+    + scale_fill_manual(values = {"Gold":"#d4af37", "Silver":"#c0c0c0", "Bronze":"#cd7f32"})   
+    + labs(
+      x = "",
+      y = "",
+      fill = "Medal"
+    ) 
     + theme_minimal() 
     + theme(
-        legend_position = "inside",
-        legend_position_inside = (0.9, 0.2),
-        legend_direction = "horizontal",
-        legend_background = element_rect(fill = "white", color = "gray"),
-        figure_size = (10, 5)
+      legend_position = "inside",
+      legend_position_inside = (0.8, 0.2),
+      legend_direction = "horizontal",
+      legend_background = element_rect(fill = "white", color = "gray"),
+      figure_size = (10, 5)
     )
 )
 ```
@@ -281,6 +295,7 @@ winter_olympics_count = winter_olympics.groupby(["year", "medal"], observed=True
     + geom_line() 
     + guides(color = guide_legend(reverse = True)) 
     + scale_x_continuous(breaks = range(1896, 2020, 8)) 
+    + scale_color_manual(values = {"Gold":"#d4af37", "Silver":"#c0c0c0", "Bronze":"#cd7f32"})   
     + labs(x = "Year", y = "", color = "Medal") 
     + theme_minimal() 
     + theme(
